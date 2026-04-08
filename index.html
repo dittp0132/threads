@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脆友探店指南 | 探索 Threads 上的隱藏好店</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto+Sans+TC', sans-serif;
+            background-color: #f9fafb;
+        }
+        .shop-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .shop-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+        }
+        /* 自訂下拉選單外觀 */
+        .custom-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.25rem;
+        }
+    </style>
+</head>
+<body class="text-gray-900">
+
+    <!-- 頁首導覽 -->
+    <header class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col items-center">
+            <h1 class="text-2xl font-bold tracking-tight text-black flex items-center gap-2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                脆友探店指南
+            </h1>
+            <p class="text-gray-500 text-sm mt-1 font-light tracking-widest uppercase">Threads Shopping Guide</p>
+        </div>
+    </header>
+
+    <!-- 篩選與搜尋區域 -->
+    <section class="max-w-4xl mx-auto px-4 pt-10 pb-6">
+        <!-- 店家名稱搜尋欄位 -->
+        <div class="mb-8">
+            <label for="search-input" class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1 mb-2 block">Search / 搜尋店家名稱</label>
+            <div class="relative group">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-black transition-colors">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </div>
+                <input type="text" id="search-input" placeholder="輸入關鍵字找好店..." class="w-full bg-white border border-gray-200 text-gray-700 py-4 pl-12 pr-4 rounded-2xl text-base focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all shadow-sm">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- 類別下拉選單 -->
+            <div class="flex flex-col gap-2">
+                <label for="category-select" class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Category / 類別</label>
+                <div class="relative">
+                    <select id="category-select" class="custom-select w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-10 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all cursor-pointer shadow-sm">
+                        <option value="all">顯示全部類別</option>
+                        <option value="店家報名">店家報名</option>
+                        <option value="美業">美業</option>
+                        <option value="按摩推拿/筋膜放鬆">按摩推拿/筋膜放鬆</option>
+                        <option value="手作類">手作類</option>
+                        <option value="選物">選物</option>
+                        <option value="飾品">飾品</option>
+                        <option value="玩具">玩具</option>
+                        <option value="攝影">攝影</option>
+                        <option value="餐廳">餐廳</option>
+                        <option value="咖啡廳">咖啡廳</option>
+                        <option value="飲料">飲料</option>
+                        <option value="小吃">小吃</option>
+                        <option value="茶葉">茶葉</option>
+                        <option value="甜點">甜點</option>
+                        <option value="海鮮">海鮮</option>
+                        <option value="農產品">農產品</option>
+                        <option value="保健類">保健類</option>
+                        <option value="無毒農業資材">無毒農業資材</option>
+                        <option value="汽機車">汽機車</option>
+                        <option value="命理諮詢">命理諮詢</option>
+                        <option value="旅遊">旅遊</option>
+                        <option value="不動產">不動產</option>
+                        <option value="設計類">設計類</option>
+                        <option value="維修服務類">維修服務類</option>
+                        <option value="裝潢工程">裝潢工程</option>
+                        <option value="家具">家具</option>
+                        <option value="電器">電器</option>
+                        <option value="花藝">花藝</option>
+                        <option value="寵物">寵物</option>
+                        <option value="清潔業">清潔業</option>
+                        <option value="眼鏡業">眼鏡業</option>
+                        <option value="製造業">傳產製造業</option>
+                        <option value="科技業">科技業</option>
+                        <option value="ESG永續發展">ESG永續發展</option>
+                        <option value="當舖">當舖</option>
+                        <option value="諮詢服務">諮詢服務</option>
+                        <option value="好康特搜">好康特搜</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 地區下拉選單 -->
+            <div class="flex flex-col gap-2">
+                <label for="region-select" class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Region / 地區</label>
+                <div class="relative">
+                    <select id="region-select" class="custom-select w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-10 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all cursor-pointer shadow-sm">
+                        <option value="all">顯示全部區域 (所有店家)</option>
+                        <option value="網路">網路 (雲端服務)</option>
+                        <option value="基隆">基隆</option>
+                        <option value="台北">台北</option>
+                        <option value="新北">新北</option>
+                        <option value="桃園">桃園</option>
+                        <option value="新竹">新竹</option>
+                        <option value="苗栗">苗栗</option>
+                        <option value="台中">台中</option>
+                        <option value="彰化">彰化</option>
+                        <option value="南投">南投</option>
+                        <option value="雲林">雲林</option>
+                        <option value="嘉義">嘉義</option>
+                        <option value="台南">台南</option>
+                        <option value="高雄">高雄</option>
+                        <option value="屏東">屏東</option>
+                        <option value="宜蘭">宜蘭</option>
+                        <option value="花蓮">花蓮</option>
+                        <option value="台東">台東</option>
+                        <option value="澎湖">澎湖</option>
+                        <option value="金門">金門</option>
+                        <option value="馬祖">馬祖</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 店家卡片列表 -->
+    <main class="max-w-6xl mx-auto px-4 pb-24">
+        <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="col-span-full py-20 text-center text-gray-400">
+                正在尋找最棒的店家...
+            </div>
+        </div>
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="bg-white border-t py-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-gray-400 text-xs tracking-widest uppercase mb-2 font-light">Curated for Threads Community</p>
+            <p class="text-gray-600 text-sm font-medium">© 脆友探店指南 · 讓美好的相遇在 Threads 延續/此網頁為一人製作，更新緩慢敬請見諒</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript 邏輯 -->
+    <script>
+        // --- 店家資料來源 (已重新排序 ID) ---
+        const shopData = [
+            {
+                id: 0,
+                name: "ditto",
+                category: "店家報名",
+                region: "網路",
+                description: "我是ditto低頭，是此網頁創作者，若有想加入此網頁的店家請到脆私訊我",
+                threadsUrl: "https://www.threads.net/@ditto_000132"
+            },
+            {
+                id: 1,
+                name: "逸芸軒",
+                category: "美業",
+                region: "網路",
+                description: "不只是變漂亮，而是成為您最耀眼的樣子｜逸芸軒堅信，真正的美，沒有標準答案。透過科技與呵護，讓您綻放獨一無二的光芒。",
+                threadsUrl: "https://www.threads.net/@yiyunxuan_"
+            },
+            {
+                id: 2,
+                name: "松鼠與橡實［ 牌卡 | 占星 | 身心靈聊遇 ］",
+                category: "命理諮詢",
+                region: "網路",
+                description: "我是賣希望的希 - Sylvia | 精靈松鼠 | 占卜師。願成為一道光，透過牌卡解讀為你指引方向。歡迎預約個人占卜與年運占卜。",
+                threadsUrl: "https://www.threads.net/@well_being_life.art"
+            },
+            {
+                id: 3,
+                name: "采琪冷凍空調",
+                category: "維修服務類",
+                region: "花蓮",
+                description: "花蓮在地｜幫認真做事的商家與職人被看見。采編與🐷編提供空調、冷藏庫、冷凍安裝、維修與保養服務，是您可靠的夥伴。",
+                threadsUrl: "https://www.threads.net/@myhao0407"
+            },
+            {
+                id: 4,
+                name: "佳泰宇木地板",
+                category: "裝潢工程",
+                region: "桃園",
+                description: "長在桃園蘆竹的質感系木地板公司❤️ | 📍 桃園市蘆竹區南山路二段230號1樓",
+                threadsUrl: "https://www.threads.net/@jiataiyu_floor"
+            },
+            {
+                id: 5,
+                name: "弘爺漢堡-彰化南郭店",
+                category: "餐廳",
+                region: "彰化",
+                description: "邁入30年的賣早餐小店🙋🏻‍♀️🙋🏻‍♂️ 慢慢收藏值得回訪的好味道𓆸 | 📍 彰化市南郭路一段 138 號 | 📞 04-728-2635 ｜ 0960-627-926",
+                threadsUrl: "https://www.threads.net/@nanguohongya"
+            },
+            {
+                id: 6,
+                name: "桐昕制作",
+                category: "裝潢工程",
+                region: "高雄",
+                description: "高雄在地室內設計 「桐昕制作」｜我是桐編ａ𝗸ａ賣鋁製立柱系統的那個鋁人。案場大多是濁水溪以南，但聊天不限地區。",
+                threadsUrl: "https://www.threads.net/@tsdesign.kh"
+            },
+            {
+                id: 7,
+                name: "貓咪屑屑｜₍˄ ₗ ̫ ₗ ˄₎◞ ̑̑ 曲奇專賣",
+                category: "甜點",
+                region: "網路",
+                description: "為了陪伴兩隻貓貓而選擇創業^>៸៸៸៸<^ 🍪 每一片曲奇都蘊含著對貓貓與生活的熱愛。歡迎預購美味的曲奇餅乾！",
+                threadsUrl: "https://www.threads.net/@cat.crumb_"
+            },
+            {   
+                id: 8,
+                name: "the table酒·餐館",
+                category: "餐廳",
+                region: "高雄",
+                description: "在微醺與清醒之間，留一段屬於自己的時間，這裡有餐、有酒，也有手沖咖啡與慢下來的理由。🏠 高雄市鼓山區美術東四路128號",
+                threadsUrl: "https://www.threads.net/@thetable128"
+            },
+            {   
+                id: 9, 
+                name: "WOW WOW 襪",
+                category: "選物",
+                region: "網路",
+                description: "正韓襪子選品/連這麼小的細節都注意到的你/妳，真有品味。讓可愛的襪子點亮你的每一天！🧦✨",
+                threadsUrl: "https://www.threads.net/@wow_wow_wow_888"
+            },
+            {
+                id: 10,
+                name: "秘醬滷味/蜜醬燒烤 新青海店",
+                category: "小吃",
+                region: "台中",
+                description: "🔥 台中西屯｜新青海｜一吃就回不去的好味道。晚上不知道吃什麼？來這裡！⏰ 下午開賣｜外帶為主。🔎 台中市青海路一段89號",
+                threadsUrl: "https://www.threads.net/@mjnewqhigh"
+            },
+            {
+                id: 11,
+                name: "家珍傳香料理包",
+                category: "小吃",
+                region: "台中 / 網路",
+                description: "家珍傳香料理包｜嚴選上等溫體豬，新鮮製成冷凍出貨。口感紮實，是家中冰箱必備的傳香美味。🐷✨",
+                threadsUrl: "https://www.threads.net/@zhangjiajianz"
+            },
+            {
+                id: 12,
+                name: "💗帥闆😎",
+                category: "茶葉",
+                region: "網路",
+                description: "要買金萱紅玉 冷熱泡茶包，歡迎找我🙋 一天 3 次出貨時段！隨包附有產地溯源資訊，讓你喝得安心、買得帥氣。🍵✨",
+                threadsUrl: "https://www.threads.net/@chuyi_0611_"
+            },
+            {
+                id: 13,
+                name: "瑞成茶廠",
+                category: "茶葉",
+                region: "網路",
+                description: "自家茶園｜瑞成茶廠 瑞成有機茶園。我是瑞成的女婿，跟著岳父學種茶製茶。主打紅玉紅茶、小葉紅茶、GABA茶。支持台灣有機茶！🍵🌿",
+                threadsUrl: "https://www.threads.net/@wun136"
+            },
+            {
+                id: 14,
+                name: "木昂手作台南府前店",
+                category: "飲料",
+                region: "台南",
+                description: "您好 我是飲料店 斜槓也有茶葉蛋｜📍 台南市中西區府前路二段224號｜📞 06-2229692。來台南一定要來試試看唷！🥤🥚",
+                threadsUrl: "https://www.threads.net/@moveon_tainan"
+            },
+            {
+                id: 15,
+                name: "柒柒似十九",
+                category: "按摩推拿/筋膜放鬆",
+                region: "台南",
+                description: "🔅台南南區🔅中華南路二段362號｜✨足底筋膜💆｜✨全身肌肉筋膜穴位按摩💆｜🏠到府服務（限女性）｜🈶刮痧、滑罐、排酸棒｜❌沒有色情服務❌｜Line: shalun2012",
+                threadsUrl: "https://www.threads.net/@77akatnnseven"
+            },
+            {
+                id: 16,
+                name: "初心咖啡💗🐘",
+                category: "咖啡廳",
+                region: "桃園",
+                description: "咖啡日常 × 療癒生活｜禮盒・手作抹醬・厚厚片。📍 桃園市平鎮區中山路193號（阿美米干斜對面）。☎️ 0968-960-786。每週三固定店休。",
+                threadsUrl: "https://www.threads.net/@heart._coffee_"
+            },
+            {
+                id: 17,
+                name: "白然序·木地板",
+                category: "裝潢工程",
+                region: "台北/新北/桃園/新竹",
+                description: "專治「地板選擇困難症」｜喜歡木質地板，更喜歡看人搬新家時開心的樣子。幫你從上百種板材中篩出最合拍的那一塊。📍 服務範圍：新竹以北｜💁‍♀️ 服務內容：地板規劃 / 連工帶料施工。",
+                threadsUrl: "https://www.threads.net/@floor_curator_tw"
+            },
+            {
+                id: 18,
+                name: "拿鐵商業攝影工作室",
+                category: "攝影",
+                region: "高雄",
+                description: "高雄商業平面攝影｜專注於平面影像與後製 12 年以上，依形象或品牌需求整合商業邏輯與視覺美學的影像工作室。《 官方作品網．諮詢聯繫 》📸✨",
+                threadsUrl: "https://www.threads.net/@lattebevis"
+            },
+            {
+                id: 19,
+                name: "手心的奇蹟｜娜娜手作",
+                category: "手作類",
+                region: "網路",
+                description: "娜娜的手作療癒小宇宙｜慢慢鈎、慢慢縫、慢慢編，把幸福感織進生活裡。手工編織髮夾・吊飾・各種小物。純手作｜可客製｜🧶✨",
+                threadsUrl: "https://www.threads.net/@handmade.miracle1125"
+            },
+            {
+                id: 20,
+                name: "安安｜金時計畫",
+                category: "小吃",
+                region: "網路",
+                description: "【金時計畫】陪伴生活的飲食品牌｜金時、今時，屬於”今時”的黃金時刻，提供有品質、生活化的美食。",
+                threadsUrl: "https://www.threads.net/@vaneann_ann"
+            }, 
+            {
+                id: 21,
+                name: "大正貿易",
+                category: "保健類",
+                region: "台北",
+                description: "【大正貿易】偶悶是從來沒打過廣告，一步一步走四十年的大正貿易有限公司，希望大家都可以身體健康😽",
+                threadsUrl: "https://www.threads.net/@orthodox_dazheng"
+            }, 
+            {
+                id: 22,
+                name: "山林希家具",
+                category: "家具",
+                region: "台北 / 台中",
+                description: "1999年起深耕印尼官方林場，自建工廠並傳承台灣工藝，確保柚木家具料實質優，為你打造經得起時間考驗的居家美學。",
+                threadsUrl: "https://www.threads.net/@307teak"
+            },
+            {
+                id: 23,
+                name: "奌爭鮮-中壢大全聯店",
+                category: "餐廳",
+                region: "桃園",
+                description: "爭鮮集團旗下品牌奌爭鮮的分店之一，主打「現點現做，新鮮直送」，不定期更新菜單",
+                threadsUrl: "https://www.threads.net/@magictouch19t38"
+            }, 
+            {
+                id: 24,
+                name: "蠟。手作",
+                category: "手作類",
+                region: "屏東",
+                description: "蠟。手作｜純手工編織繩🧶用心、慢慢編的溫柔作品｜可客製～打造專屬小物💘✨",
+                threadsUrl: "https://www.threads.net/@tscycle"
+            }, 
+            {
+                id: 25,
+                name: "福吉果園",
+                category: "農產品",
+                region: "桃園",
+                description: "我們是來自桃園復興區的泰雅水蜜桃小農🧑‍🌾家裡種植水蜜桃超過30年，有五月桃還有七月桃！有空產季時歡迎上山走走呦，還可以捏福吉的屁股。",
+                threadsUrl: "https://www.threads.net/@fuji_tayal"
+            }, 
+            {
+                id: 26,
+                name: "Jeffrey群",
+                category: "電器",
+                region: "網路",
+                description: "空氣清淨機和淨水器代理商｜沒有固定的店面，主要都做網路",
+                threadsUrl: "https://www.threads.net/@wang_jeffrey2027"
+            }, 
+            {
+                id: 27,
+                name: "礦舞礦物漂流💎",
+                category: "飾品",
+                region: "網路",
+                description: "我販賣天然寶石×925銀飾，但更有嘗試的是——把寶石從“昂貴的收藏”變成“你每天都戴需要的看”。不用很懂珠寶，也能慢慢找到適合自己的那顆✨",
+                threadsUrl: "https://www.threads.net/@mineral_drift"
+            }, 
+            {
+                id: 28,
+                name: "94 cafe",
+                category: "咖啡廳",
+                region: "高雄",
+                description: "岡山在地經營10年咖啡店，號稱岡山最安靜的咖啡店，咖啡、老街、故事，這裡是我慢慢經營的地方，也是大家可以停下來的角落，也可以來講幹話🤣，也有販賣咖啡豆，歡迎追蹤，謝謝🙏✨",
+                threadsUrl: "https://www.threads.net/@gangshan94cafe"
+            }, 
+            {
+                id: 29,
+                name: "我想飯鬆",
+                category: "餐廳",
+                region: "桃園",
+                description: "在桃園愛買附近，專賣韓式飯捲、現烤鬆餅。為了兩隻橘貓努力賺罐罐錢🐱",
+                threadsUrl: "https://www.threads.net/@iw_funson"
+            }, 
+            {
+                id: 30,
+                name: "懶癌雙寶媽",
+                category: "玩具",
+                region: "台中",
+                description: "我是雙寶媽因為太愛買玩具給小孩了🤣後來乾脆開始分享，小孩真的很愛玩的玩具🧸因為想偷懶，更要選對玩具陪玩🤣",
+                threadsUrl: "https://www.threads.net/@lazy_mommylife"
+            },
+            {
+                id: 31,
+                name: "花錦年",
+                category: "花藝",
+                region: "高雄",
+                description: "不為賺錢，只為看到大家笑容的花店，主要永生花花禮；鮮花不定時販售🌷",
+                threadsUrl: "https://www.threads.net/@floranian618"
+            },
+            {
+                id: 32,
+                name: "羽菓茶寮",
+                category: "甜點",
+                region: "宜蘭",
+                description: "因喜歡而開的小店，希望更多人能夠認識和菓子的魅力，店內也有可愛的貓貓可以跟他們當朋友喔！",
+                threadsUrl: "https://www.threads.net/@yuguo.2025"
+            },
+            {
+                id: 33,
+                name: "YI手作烘焙",
+                category: "甜點",
+                region: "台中",
+                description: "是一位安親老師，因為喜歡做烘焙也需要放鬆心情因而開起了斜槓烘焙",
+                threadsUrl: "https://www.threads.net/@tina07052128"
+            },
+            {
+                id: 34,
+                name: "淨水設備-鑫成電子有限公司",
+                category: "電器",
+                region: "台中/彰化/南投",
+                description: "台中在地淨水設備公司，服務內容：飲水機、淨水器、軟水機、全戶淨水，任何問題歡迎私訊、追蹤！給鑫成一個服務您的機會🙏😊",
+                threadsUrl: "https://www.threads.net/@kai.water.tw"
+            },
+            {
+                id: 35,
+                name: "菁丹晶品｜水晶礦石．蠟線編織．手作．選品｜",
+                category: "命理諮詢 / 手作類",
+                region: "台中",
+                description: "水晶礦石丨能量飾品靈擺配對丨雷諾曼占卜、水晶能量解讀丨蠟線手作透過能量與直覺，找到屬於你的水晶夥伴。讓水晶不只是飾品，而是陪你前行的夥伴。",
+                threadsUrl: "https://www.threads.net/@jdhealingboutique"
+            },
+            {
+                id: 36,
+                name: "臻誠傳統整復推拿",
+                category: "按摩推拿/筋膜放鬆",
+                region: "桃園",
+                description: "溫柔且深層的手法帶您進入不一樣的世界",
+                threadsUrl: "https://www.threads.net/@bodyworker_taoyuan"
+            },
+            {
+                id: 37,
+                name: "匠心茶韻",
+                category: "茶葉",
+                region: "南投",
+                description: "有需要茶包、茶葉、茶粉、商用茶都可以找我喔，非常歡迎大家",
+                threadsUrl: "https://www.threads.net/@tw.good_qualitea"
+            },
+            {
+                id: 38,
+                name: "Ailin艾溫時光",
+                category: "按摩推拿/筋膜放鬆",
+                region: "高雄",
+                description: "艾草溫罐/臉部溫罐/油壓/足底/純耳燭丨無任何推銷、無任何銷售課程、無任何話術、女客男客都服務獨立包廂、可淋浴銀齡肩頸公益中華民國溫罐經絡調理養生協會❌無奇怪的特殊服務、拒絕任何言語或肢體騷擾、勿觸法請三思",
+                threadsUrl: "https://www.threads.net/@ailin_1023"
+            },
+            {
+                id: 39,
+                name: "9527.bibi",
+                category: "美業",
+                region: "新北",
+                description: "剛起步的新手美甲師，在新店徵手模中，不用擔心手收不漂亮，我們來一起養漂亮指甲",
+                threadsUrl: "https://www.threads.net/@9527.bibi"
+            },
+            {
+                id: 40,
+                name: "桃園王品傢俱行",
+                category: "家具",
+                region: "桃園",
+                description: "桃園王品傢俱行小小傢俱店沒有華麗的裝潢丨賣的是真心❣️不賣你假意👀💕有傢俱需求歡迎詢問唷💕方Line:@azi7929r📞03-3239337📱0913402770店址：桃園市蘆竹區六福路359號2樓🈺週二至週日9：00~19：30",
+                threadsUrl: "https://www.threads.net/@wangpin033239337"
+            },
+            {
+                id: 41,
+                name: "幸福久久窩",
+                category: "不動產",
+                region: "台北/台中",
+                description: "為房東守護好家，為房客找到久窩，讓大家幸福久久🥰",
+                threadsUrl: "https://www.threads.net/@995home.tw"
+            },
+            {
+                id: 42,
+                name: "牪嗑牛排",
+                category: "餐廳",
+                region: "新北",
+                description: "牪嗑（ㄧㄢˋㄎㄜˋ）兩間店、同一份堅持把平價牛排做到讓你覺得值得回頭🫶📍 板橋店｜新海路63號📍 中和店｜民德路136號⏰ 11:30–22:00｜週三店休(詳細店休日在主頁置頂）",
+                threadsUrl: "https://www.threads.net/@feast.steak_zhonghe"
+            },
+            {
+                id: 43,
+                name: "刺身太郎",
+                category: "餐廳",
+                region: "新北",
+                description: "刺身太郎｜新鮮現切生魚片、丼飯專賣，嚴選魚貨，用心做好每一份美味。",
+                threadsUrl: "https://www.threads.net/@sashimitaro"
+            },
+            {
+                id: 44,
+                name: "毛毛藻",
+                category: "寵物",
+                region: "台中",
+                description: "我們專注於寵物健康，比你更在意牠們「吃得好不好、動得順不順、尿得暢不暢」的偏執狂。在毛毛藻，我們不搞虛華的噱頭，我們只搞定：​口腔護理（褐藻潔牙）｜​行動力（關節）｜​私密護理（泌尿）。",
+                threadsUrl: "https://www.threads.net/@furrykelp_co"
+            },
+            {
+                id: 45,
+                name: "尚猛冷氣空調行",
+                category: "裝潢工程",
+                region: "台中",
+                description: "台中西區在地經營多年的冷氣空調行❄️專注施工品質，不走低價路線安裝｜清洗｜維修 一條龍服務🧰用細節與技術，讓冷氣真正耐用又穩定❤️",
+                threadsUrl: "https://www.threads.net/@rick_918918"
+            },
+            {
+                id: 46,
+                name: "時刻有你",
+                category: "手作類",
+                region: "網路",
+                description: "客製化｜3D列印｜紀念禮物｜打造專屬於你的紀念商品讓重要的牽絆時刻陪在你身邊「時刻有你❤️」將回憶具象化",
+                threadsUrl: "https://www.threads.net/@always_w_u_99"
+            },
+            {
+                id: 47,
+                name: "Funcarwrap(ㄚ松)",
+                category: "汽機車",
+                region: "新北",
+                description: "專業包膜、美容、精品改裝，替你找到你想要的東西，解決車輛大小事",
+                threadsUrl: "https://www.threads.net/@funsocar"
+            },
+            {
+                id: 48,
+                name: "愷恩空調企業社",
+                category: "裝潢工程",
+                region: "雲林",
+                description: "雲林在地冷氣行!!!!專注施工品質，不酒、檳榔的團隊｜安裝｜清洗｜維修 ｜家電維修",
+                threadsUrl: "https://www.threads.net/@k.n_air"
+            },
+            {
+                id: 49,
+                name: "凱峰工程行",
+                category: "裝潢工程",
+                region: "嘉義/台南/高雄/屏東",
+                description: "鐵皮屋｜鋼構｜鋼筋綁紮價格透明｜施工穩定｜免費估價👌",
+                threadsUrl: "https://www.threads.net/@feow._"
+            },
+            {
+                id: 50,
+                name: "蒜頭自售",
+                category: "農產品",
+                region: "雲林",
+                description: "4月濕蒜頭，6月乾蒜頭各種尺寸、規格隨意選擇｜賣貨便、宅配、自取都可配合",
+                threadsUrl: "https://www.threads.net/@wsf.0121"
+            },
+            {
+                id: 51,
+                name: "邱家果園",
+                category: "農產品",
+                region: "苗栗",
+                description: "傳承父親的果園，我們是二代果農，希望更多人能夠支持我們台灣本土的水果🍊🍊",
+                threadsUrl: "https://www.threads.net/@yalingchen1005"
+            },
+            {
+                id: 52,
+                name: "得魚食堂",
+                category: "餐廳",
+                region: "彰化",
+                description: "🍱 得魚食堂｜彰化日式定食小店🐟 日本空運鮮魚 × 彰化在地職人料理🔥 招牌嚴烤大鯖魚•壽喜燒•厚切豬排•唐揚雞｜每日手作 6 格小菜🏮 用一份定食，找回日本家常的溫度📞 每日限量｜請先預約 04-7112628🚫 週二公休📍 彰化市大埔路 380 號",
+                threadsUrl: "https://www.threads.net/@blessing__2628"
+            },
+            {
+                id: 53,
+                name: "蔬花底加",
+                category: "花藝",
+                region: "新北",
+                description: "可以吃的花🤩獻給重要的人，一束不流於形式的浪漫！我們把最新鮮的蔬果＋繽紛花材，一束一束變成實用又有感的創意花束，歡迎追蹤訂購！",
+                threadsUrl: "https://www.threads.net/@garden7god"
+            },
+            {
+                id: 54,
+                name: "三采田｜軟餅乾｜手工餅乾",
+                category: "甜點",
+                region: "台中/網路",
+                description: "🍪40g軟餅乾▫️剛好的重量▫️純粹的美味▫️簡單的幸福忙碌之餘，別忘了給自己一點點甜💕",
+                threadsUrl: "https://www.threads.net/@panbakery2024"
+            },
+            {
+                id: 55,
+                name: "金礦928頂級足體舒壓",
+                category: "按摩推拿/筋膜放鬆",
+                region: "台中",
+                description: "「享受，就應該擁有最好的」",
+                threadsUrl: "https://www.threads.net/@goldmine928massage_official_"
+            },
+            {
+                id: 56,
+                name: "菲莉雅國際美容有限公司",
+                category: "美業",
+                region: "台中/高雄",
+                description: "菲莉雅是專注肌膚管理的沙龍品牌｜專業 × 客製 × 與美業共同成長創立於民國 88 年，20 餘年深受美容同業肯定以嚴格把關的成分，打造安全、穩定、具專業性的肌膚管理產品",
+                threadsUrl: "https://www.threads.net/@feiliya.care"
+            },
+            {
+                id: 57,
+                name: "RevivTaiwan睿維護齒套",
+                category: "保健類",
+                region: "網路",
+                description: "睿維護齒套🦷從生物力學出發，適合磨牙打呼族群使用，找回「口腔×睡眠×身體」的健康平衡🧩",
+                threadsUrl: "https://www.threads.net/@revivmouthguardtaiwan"
+            },
+            {
+                id: 58,
+                name: "台灣肯潔",
+                category: "清潔業",
+                region: "台北",
+                description: "台灣專業清潔第一品牌👉🏻台灣肯潔30年清潔經驗，食品級藥劑“洗地毯最強”還有其他清潔服務項目如飯店清潔、商辦清潔、石材保養、病媒消毒歡迎到主頁查看洽詢🖖🏻全台皆有服務，估價免費！",
+                threadsUrl: "https://www.threads.net/@twchemdry"
+            },
+            {
+                id: 59,
+                name: "微淨間",
+                category: "清潔業",
+                region: "台南/高雄",
+                description: "微淨間不只清潔！主要服務項目［裝潢細清/除甲醛］｜其他清潔服務項目如商辦、商空清潔、石材保養、病媒消毒。歡迎到主頁查看洽詢✌️",
+                threadsUrl: "https://www.threads.net/@weijingjian_vest"
+            },
+            {
+                id: 60,
+                name: "馨品鄉",
+                category: "甜點",
+                region: "台中",
+                description: "臺中第一家「夏威夷果」牛軋糖創始店！獲選台中十大伴手禮、大台中厚禮數人氣賞第一名等多項殊榮。",
+                threadsUrl: "https://www.threads.net/@shinpinshan"
+            },
+            {
+                id: 61,
+                name: "崙禾社企｜嘉義蘆筍全株利用",
+                category: "農產品",
+                region: "嘉義",
+                description: "我們是來自嘉義溪口的【崙禾社企】以「蘆筍」為起點，串起農業與地方創生的社會企業。不只販售「生鮮綠蘆筍」，我們更堅持「蘆筍 0 浪費」透過循環經濟，再製成營養機能商品💪『讓每一份農產都不被浪費，為台灣農業永續多走一步😉。』",
+                threadsUrl: "https://www.threads.net/@lwsocialenterprise"
+            },
+            {
+                id: 62,
+                name: "碳言碳語",
+                category: "ESG永續發展",
+                region: "新北",
+                description: "碳言碳語平時分享維護、能源、碳相關知識｜我們公司是做能源管理與第三方查證的團隊陪企業一起走在永續轉型的路上🌏如果有碳盤查、碳足跡、能源管理問題都可以找碳碳🧡聯絡電話：02-2269-2762",
+                threadsUrl: "https://www.threads.net/@c.talk.official"
+            },
+            {
+                id: 63,
+                name: "宏笙眼鏡業｜宏笙驗光所",
+                category: "眼鏡業",
+                region: "桃園",
+                description: "最關心你眼睛與流行的專業驗光師潔西與眼鏡為伍47年的眼鏡職人黃爸｜強強聯手 給你清晰的視野🤓",
+                threadsUrl: "https://www.threads.net/@hs.opticians_taoyuan"
+            },
+            {
+                id: 64,
+                name: "振芳中藥房",
+                category: "保健類",
+                region: "台南",
+                description: "在地服務百年老中藥房，致力於開發各式中藥周邊商品與客製化服務。",
+                threadsUrl: "https://www.threads.net/@zhenfang100"
+            },
+            {
+                id: 65,
+                name: "鱻匠水產",
+                category: "海鮮",
+                region: "屏東/網路",
+                description: "鮭魚、鮪魚、旗魚……魚各部位及生魚片、餐廳批發、家庭料理、健身減脂，寵物食品（凍乾、鮮食或零食代工）。",
+                threadsUrl: "https://www.threads.net/@xian_jiang.56"
+            },
+            {
+                id: 66,
+                name: "絲若雲建髮中心",
+                category: "美業",
+                region: "台北",
+                description: "來自日本16年建髮品牌，位於台北車站旁，透過非侵入方式讓顧客自然長出頭髮。",
+                threadsUrl: "https://www.threads.net/@sshair_tw"
+            },
+            {
+                id: 67,
+                name: "花水木居家清潔",
+                category: "清潔業",
+                region: "高雄",
+                description: "高雄在地深耕逾10年，提供大掃除、單次鐘點、裝潢細清、空屋清潔、床墊清洗等多項室內清潔服務。不論是居家、企業商辦、學校等空間，都能穩定提供高品質的專業服務！",
+                threadsUrl: "https://www.threads.net/@hana_mizu_kiseki"
+            },
+            {
+                id: 68,
+                name: "東漂小公主",
+                category: "手作類",
+                region: "台東/網路",
+                description: "我是東漂小公主 熱愛青草文化，想讓大家感受大地之母的守護能量。手工製作「除穢淨化草本平安包」可沐浴、足浴、安神助眠、淨身避穢、祛濕除濁、香氛空間。",
+                threadsUrl: "https://www.threads.net/@kdwprincess"
+            },
+            {
+                id: 69,
+                name: "明騰車業",
+                category: "汽機車",
+                region: "桃園",
+                description: "全車系保養｜維修｜改裝｜日系歐系攏欸賽～歡迎來店裡抬槓🙌🏼",
+                threadsUrl: "https://www.threads.net/@mt_car.service"
+            },
+            {
+                id: 70,
+                name: "VEKAII 薇愷",
+                category: "美業",
+                region: "網路",
+                description: "為日常而生的安心保養，溫和穩定，陪肌膚慢慢變好。",
+                threadsUrl: "https://www.threads.net/@vekaii_official"
+            },
+            {
+                id: 71,
+                name: "小浣熊專業居家清潔",
+                category: "清潔業",
+                region: "台南",
+                description: "專注於居家清潔、大掃除與裝潢後細清服務｜我們重視細節與品質，不趕時間不馬虎｜用專業把每個空間整理乾淨讓您回到家就能安心放鬆✨",
+                threadsUrl: "https://www.threads.net/@raccoon_cleaning_"
+            },
+            {
+                id: 72,
+                name: "owolash",
+                category: "美業",
+                region: "彰化",
+                description: "彰化美睫到府服務owo 假日也有跑台中，美睫外送員平日晚上、例假日全天+line預約@656gxdea,來找我變漂亮",
+                threadsUrl: "https://www.threads.net/@owolash_tw"
+            },
+            {
+                id: 73,
+                name: "花芯水晶· HUAXI CRYSTAL",
+                category: "手作類",
+                region: "台中",
+                description: "水晶設計款手練｜客製化花最深厚的心思，準備一份溫暖的禮物✨快來尋找屬於你的花園晶靈吧💗",
+                threadsUrl: "https://www.threads.net/@huaxin_crystal"
+            },
+            {
+                id: 74,
+                name: "歐柏麥小舖",
+                category: "製造業",
+                region: "桃園",
+                description: "台灣在地工廠專業品質深耕近40年｜協助上千家商家及企業客製化品牌包裝｜工廠直營門市近10年多款公版袋少量零售批發｜有需要袋袋記得找歐柏麥小舖唷",
+                threadsUrl: "https://www.threads.net/@ooooomyhanji"
+            },
+            {
+                id: 75,
+                name: "Eazyme 微酵",
+                category: "保健類",
+                region: "台中/台南",
+                description: "品牌理念「自然、無負擔、日常可持續」。不追求短暫快速，而是以「漸進式」的陪伴，讓使用者在一段時間後，感受到由內而外的改善。這不只是保健，更是一種長期的自我照顧。「自然循環，專業守護 — eazy me 微酵」給身體一份輕盈的日常，讓代謝更順暢",
+                threadsUrl: "https://www.threads.net/@eazyme1982"
+            },
+            {
+                id: 76,
+                name: "頌丹樂泰式料理",
+                category: "餐廳",
+                region: "台北",
+                description: "道地的泰國東北伊善料理，台灣首店頌丹樂，聯名系列在7-11超商也有，但是店內的更香，泰好吃😋推薦冬蔭功湯、香辣打拋豬、青木瓜沙拉、金錢蝦餅佐秘梅醬❤️",
+                threadsUrl: "https://www.threads.net/@somtumdertaiwan"
+            },
+            {
+                id: 77,
+                name: "太平製茶",
+                category: "茶葉",
+                region: "高雄",
+                description: "我們是第四代接手的茶行，自用送禮最佳選擇，茶葉、茶包只要跟茶葉有關的我們都有",
+                threadsUrl: "https://www.threads.net/@taipin_tea166"
+            },
+            {
+                id: 78,
+                name: "漫步雲端日本旅遊",
+                category: "旅遊",
+                region: "網路",
+                description: "輕鬆遊日本✨｜旅遊首選✈️機場接送｜客製化包車🛡️【合法綠牌車】安全有保障",
+                threadsUrl: "https://www.threads.net/@tipsytrip_"
+            },
+            {
+                id: 79,
+                name: "榮昊有限公司",
+                category: "無毒農業資材",
+                region: "台中",
+                description: "友善耕作資材｜大蒜素主要功能是驅蟲、抗病、強健根系 採收期可以安心使用！也能夠幫助洗掉殘餘農藥 讓作物在採收期間也能維持健康的狀態～",
+                threadsUrl: "https://www.threads.net/@ronghao_0511"
+            },
+            {
+                id: 80,
+                name: "微醺",
+                category: "旅遊",
+                region: "金門",
+                description: "金門住宿訂房找微醺😎📷提供金門景點＆活動＆美食分享懶人包📍鄰近金門酒廠/聚落/碼頭/旅遊方便",
+                threadsUrl: "https://www.threads.net/@kinmentipsyhotel"
+            },
+            {
+                id: 81,
+                name: "山間秘藏",
+                category: "農產品",
+                region: "台中",
+                description: "隱居山林的生活，種著四季農產品，在每一季採收都能跟大家分享⋯⋯3月的枇杷、7-10月黃金果、9-11月紅柿，還有少量的破布子等農作物",
+                threadsUrl: "https://www.threads.net/@diooomi575"
+            },
+            {
+                id: 82,
+                name: "鄭家農場",
+                category: "農產品",
+                region: "彰化",
+                description: "主力產品珍蜜蜜棗農場地址：彰化縣秀水鄉雅興街178巷7號❤️友善環境，無毒栽種❤️❌ 全場皆不使用農藥、化學肥料、甜味劑、除草劑⭕️ 全程使用自製酵素及有機肥施肥、人工及養鵝除草、網室栽種",
+                threadsUrl: "https://www.threads.net/@cheng_farm"
+            },
+            {
+                id: 83,
+                name: "鹽夢工場",
+                category: "飾品",
+                region: "台北/新北",
+                description: "八里與松菸皆有門市提供各式鹽燈、DIY體驗、鹽磚建材與文創生活等商品｜希望為大家帶來溫暖療療的能量✨",
+                threadsUrl: "https://www.threads.net/@saltlife.tw"
+            },
+            {
+                id: 84,
+                name: "醫美圈圈",
+                category: "美業",
+                region: "台北",
+                description: " 「醫美圈圈」分享實用的醫美資訊。集結近百位認證醫師、300+ 真實案例，從知識整理到療程解析，帶你看懂每項療程差異！不盲從、不踩雷，只推薦適合醫師。陪你一步步建立正確的醫美觀念，讓變美這件事，有方向、少走冤枉路！",
+                threadsUrl: "https://www.threads.net/@worthit.com.tw"
+            },
+            {
+                id: 85,
+                name: "飛鳥烏龍",
+                category: "茶葉",
+                region: "台中",
+                description: "我們只販售台灣的各式茶葉｜無論是冬茶、春茶、各式老茶還是以前的茶餅應有盡有！",
+                threadsUrl: "https://www.threads.net/@find_taiwantea"
+            },
+            {
+                id: 86,
+                name: "榴槤刺蝟Nice Durian",
+                category: "甜點",
+                region: "花蓮/網路",
+                description: "🦔 榴槤專賣｜現剝榴槤（產季限定)🍈 各式榴槤產品｜甜點、飲品｜宅配📍 內用區｜不被家人嫌棄，安心吃官網：http://DURIAN.com.tw",
+                threadsUrl: "https://www.threads.net/@nice_durian"
+            },
+            {
+                id: 87,
+                name: "嘻遊記麻辣燙",
+                category: "餐廳",
+                region: "高雄",
+                description: "在地經營超過20年的平價小火鍋🍲我們搬新家啦✨老客人還記得這個味道嗎？新朋友想不想來試試看😋一起把這份好滋味繼續傳下去｜營業時間：中午11:30～凌晨1:00📞 預約 專線0918683881🚫 週三公休📍 高雄市新興區六合一路82號",
+                threadsUrl: "https://www.threads.net/@hiapple7023"
+            },
+            {
+                id: 88,
+                name: "果友科技有限公司",
+                category: "科技業",
+                region: "台北/桃園/網路",
+                description: "果友專做 AI 工具、系統開發、小工具應用 (像是排班、客服預約、資訊快速檢索小幫手等都可以唷～～)",
+                threadsUrl: "https://www.threads.net/@minigo2025"
+            },
+            {
+                id: 89,
+                name: "Min’s羊毛氈",
+                category: "手作類",
+                region: "高雄/網路",
+                description: "嗨嗨～我是Min，專做羊毛氈兔兔與寵物擬真，把最可愛的瞬間變成可以一直陪伴的存在。",
+                threadsUrl: "https://www.threads.net/@mins.wool"
+            },
+            {
+                id: 90,
+                name: "熱蠟美肌.私密保養",
+                category: "美業",
+                region: "台南",
+                description: "用溫的蠟來溫暖你的心來到我這人人皆是少女|願你我都擁有一顆少女的心，而我會像呵護我家女兒般用心處理你的煩毛衛生第一|醫療級高溫高壓滅菌大女孩專屬|獨立空間",
+                threadsUrl: "https://www.threads.net/@kikiroro_sister"
+            },
+            {
+                id: 91,
+                name: "博宏蒸煮時光",
+                category: "餐廳",
+                region: "高雄",
+                description: "專門選用台灣農產|做出適合全家大小的懶人輕食",
+                threadsUrl: "https://www.threads.net/@mboxiang"
+            },
+            {
+                id: 92,
+                name: "市場飯捲시장김밥",
+                category: "小吃",
+                region: "台南",
+                description: "我們是一間韓式飯捲專賣店，位於台南的尚青黃昏市場。從傳統市場出發，把韓國家常飯捲的帶進台灣生活日常。自製風味沾醬是我們的特色，也是飯捲的靈魂一味，讓道地的韓國滋味多了點熟悉的台灣氣口。堅持每日新鮮現做，健康清爽無負擔的美味選擇。🕐營業時間：13:00～19:00(售完為止)☎️預訂專線：0931-705680📱LINE ID：@045rvbow📍台南永康 尚青黃昏市場",
+                threadsUrl: "https://www.threads.net/@gimbapmashida"
+            },
+            {
+                id: 93,
+                name: "鱻鎢漁舖XIAN•W",
+                category: "海鮮",
+                region: "宜蘭",
+                description: "「一年只專注兩味：夏香魚，冬魚子。」我們在宜蘭，以活水與冷風重新定義鮮甜。捨棄傳統曝曬，專研「冷熟成」工藝：🐟 活水香魚｜清澈水源養殖，肉質細緻帶瓜香。💎 冷風魚子｜低溫熟成工法，口感黏糯極淨。不靠天氣，靠的是對風味的極致偏執。—— 鱻鎢漁舖，專注純淨風味的偏執者。",
+                threadsUrl: "https://www.threads.net/@xianw_ayu_mullet"
+            },
+            {
+                id: 94,
+                name: "八德王記北平烤鴨",
+                category: "餐廳",
+                region: "桃園",
+                description: "八德最帥的那隻鴨，王記烤鴨。主打手工餅皮，一鴨兩吃、份量給好給滿，皮香肉多汁，是會讓人回味無窮的味道。",
+                threadsUrl: "https://www.threads.net/@qwe8974550426"
+            },
+            {
+                id: 95,
+                name: "三星地區農會",
+                category: "農產品/旅遊",
+                region: "宜蘭",
+                description: "有好吃的蔥跟可愛的ㄚ蔥🤪",
+                threadsUrl: "https://www.threads.net/@sunshingreenonion"
+            },
+            {
+                id: 96,
+                name: "喬麥屋",
+                category: "餐廳",
+                region: "新北",
+                description: "大家好我是小喬-一位賣麵仔，從小吃到大直接來上班的社畜，老闆不會看脆所以都在mur mur (ง ˙˘˙ )ว最喜歡客人說「吃了你們的麵就不吃別人了」，不求大富大貴只希望一點點讓更多人認識喬麥屋的好( ´͈ ᗜ `͈ )♡吃過一次就回不去的麵麵~歡迎來呷大家一起來玩",
+                threadsUrl: "https://www.threads.net/@cmunoodle"
+            },
+            {
+                id: 97,
+                name: "奇制設計",
+                category: "設計類",
+                region: "新竹/苗栗",
+                description: "專業設計整合服務，精準打造品牌視覺，客製化呈現獨特價值。奇制設計；出奇制勝。 ",
+                threadsUrl: "https://www.threads.net/@qizhi_design"
+            },
+            {
+                id: 98,
+                name: "嬉物所",
+                category: "選物",
+                region: "新北/網路",
+                description: "各式髮飾及耳飾風格|嬉望你幸福美一天",
+                threadsUrl: "https://www.threads.net/@xishop730"
+            },
+            {
+                id: 99,
+                name: "一心當舖",
+                category: "當舖",
+                region: "台中",
+                description: "活網海巡仔，專業評估提供客戶最完美效率。",
+                threadsUrl: "https://www.threads.net/@pawn15100"
+            },
+            {
+                id: 100,
+                name: "宜蘭春風草堂民宿",
+                category: "旅遊",
+                region: "宜蘭",
+                description: "我們是在宜蘭鄉間的民宿，庭院裡有阿滿姨每天照顧的無農藥蔬菜，早餐是她親手準備的清粥小菜，簡單但很安心。",
+                threadsUrl: "https://www.threads.net/@chunfeng.yilan"
+            },
+            {
+                id: 101,
+                name: "水工江地板精品館",
+                category: "裝潢工程",
+                region: "基隆/台北/新北/桃園/新竹/苗栗",
+                description: "桃園中壢木地板專家，專營高質感耐用地板與客製化設計施工。",
+                threadsUrl: "https://www.threads.net/@chiang_floor"
+            },
+            {
+                id: 102,
+                name: "堤夏克",
+                category: "甜點/飲料",
+                region: "台南",
+                description: "本店(σ°∀°)σ..:*☆茶飲無糖不苦澀，初鹿鮮奶最醇厚，瑪黑茶香超講究，職人手作好品質！",
+                threadsUrl: "https://www.threads.net/@teashake390"
+            },
+            {
+                id: 103,
+                name: "正鼎家電｜30年老品牌",
+                category: "維修服務類/清潔業",
+                region: "網路",
+                description: "全台服務(除花東)｜一通電話到府清洗✨家電維修、清洗保養、販售安裝樣樣精通",
+                threadsUrl: "https://www.threads.net/@zdgo_"
+            },
+            {
+                id: 104,
+                name: "慕夏居精品傢俬",
+                category: "家具",
+                region: "台中",
+                description: "我們是台中南屯在地經營的店家，無論您需要質感的精品傢俱還是展現獨一無二自我品味的客製化傢俱，都歡迎來店體驗空間設計結合軟裝美學的服務，期待能與您一起完成夢想中的家，成為您心目中私心推薦的傢俬店。",
+                threadsUrl: "https://www.threads.net/@mucha.2016"
+            },
+            {
+                id: 105,
+                name: "草太長",
+                category: "餐廳",
+                region: "花蓮",
+                description: "哩賀！我是草太長🙋🏻我在花蓮開了一間小小間的早午餐🥪目前即將邁入第四年（還在努力）|如果有機會來花蓮歡迎來我們家吃早餐吃午餐❤️在這茫茫大概海中你看到我，就是個緣分！啊！忘了說大家可以叫我草編🥰。",
+                threadsUrl: "https://www.threads.net/@l.grass_2022"
+            },
+            {
+                id: 106,
+                name: "挺會選品",
+                category: "選物",
+                region: "網路",
+                description: "美澳韓專區代購x高雄三民貝緹旅行箱專賣每天美的質感好物選品ING🌈許願商品來問我大家可以先看看我的串文，相關商品都可以詢問代購就算有公版商品圖，還是很想自己做圖的挺挺編，想做出自己覺得好看質感的氛圍～如果也是喜歡美麗質感的事物，這裡很適合大家挺會的 挺美的😗期待與各位相遇",
+                threadsUrl: "https://www.threads.net/@th.selection"
+            },
+            {
+                id: 107,
+                name: "Juicy 芹 🥬",
+                category: "飲料",
+                region: "台中/網路",
+                description: "冷壓西芹汁與蔬果汁，每日新鮮製作。",
+                threadsUrl: "https://www.threads.net/@juicy.qin"
+            },
+            {
+                id: 108,
+                name: "在地小芭",
+                category: "農產品",
+                region: "屏東",
+                description: "在屏東自產自銷的小農，農產品都是用心在照顧研發的，而且小芭的農產品一年四季都有的，走過路過不要錯過小芭。",
+                threadsUrl: "https://www.threads.net/@siaoba_"
+            },
+            {
+                id: 109,
+                name: "蛋抵家",
+                category: "農產品",
+                region: "台中",
+                description: "安妞！我們是在台中地區主打一盒土雞蛋就幫你送到家的蛋抵家🥚（土雞蛋）因為是牧場直營所以非常新鮮呦一盒有2.5斤 大概22-24顆🥚只要220元！而且一盒就幫你送到家還免運",
+                threadsUrl: "https://www.threads.net/@dan_di_jia"
+            },
+            {
+                id: 110,
+                name: "momoyoku日式陶板浴",
+                category: "保健類",
+                region: "台北",
+                description: "來自日本的正宗陶板浴，又稱為乾式溫泉♨️穿著浴衣丶流舒服的好汗，連曰本人都特地前來～I人友善，可線上預約",
+                threadsUrl: "https://www.threads.net/@momoyoku.tw"
+            },
+            {
+                id: 111,
+                name: "食金好食 早午餐",
+                category: "餐廳",
+                region: "台南",
+                description: "可以坐著慢慢吃早餐跟午餐的好地方♪( ´▽｀)",
+                threadsUrl: "https://www.threads.net/@eatgold2024"
+            },
+            {
+                id: 112,
+                name: "十甲有機農場",
+                category: "農產品",
+                region: "嘉義",
+                description: "國產有機雜糧 黃豆/黑豆/小麥/硬質玉米｜讓生態、生產與生活共好，是十甲的堅持。",
+                threadsUrl: "https://www.threads.net/@shi_jia_organic_farm"
+            },
+            {
+                id: 113,
+                name: "靜涼茶坊",
+                category: "飲料",
+                region: "台南",
+                description: "我們有台南在地阿婆水特調還有抗氧化桑椹系列的飲料！",
+                threadsUrl: "https://www.threads.net/@jingliang_no.1"
+            },
+            {
+                id: 114,
+                name: "漫鉤 | 鉤織手作 | 手混線",
+                category: "手作類",
+                region: "高雄",
+                description: "嗨，我是 漫鉤。用鉤針一針一線把生活的溫度鉤進作品裡。希望帶給你一點療癒、一點可愛、和剛剛好的溫暖。💜🧶",
+                threadsUrl: "https://www.threads.net/@_mango_crochet"
+            },
+            {
+                id: 115,
+                name: "三合院手作",
+                category: "手作類",
+                region: "桃園",
+                description: "販售由小院親手編織的各式編織商品、包包和心願小馬",
+                threadsUrl: "https://www.threads.net/@three_section_compound"
+            },
+            {
+                id: 116,
+                name: "94ibuy章魚燒袋熊",
+                category: "選物",
+                region: "網路",
+                description: "94IBUY 章魚燒袋熊｜包包｜吊飾｜香氛｜娃娃｜御守想要有溫度又不無聊的禮物，本熊幫你搞定",
+                threadsUrl: "https://www.threads.net/@94ibuyshop"
+            },
+            {
+                id: 117,
+                name: "雞工坊",
+                category: "小吃",
+                region: "新北",
+                description: "雞工坊｜不是普通的雞，是會上癮的雞每天新鮮現做，香味直接抓住你嚴選黑羽土雞，只為做好這一隻雞從處理到上桌，每一步都不馬虎一吃就知道，回不去了",
+                threadsUrl: "https://www.threads.net/@chii_kong"
+            },
+            {
+                id: 118,
+                name: "Crow",
+                category: "設計類",
+                region: "新竹",
+                description: "我是奇制設計平面設計師Crow，打造高辨識品牌視覺，提供Logo名片與客製設計。",
+                threadsUrl: "https://www.threads.net/@yatagarasu_crow_lee"
+            },
+            {
+                id: 119,
+                name: "Dora 療癒手作",
+                category: "手作類",
+                region: "新北",
+                description: "嗨，我是Dora療癒手作｜用心手作水晶手鍊✨能量蠟燭🕯️讓水晶，成為你心裡的療癒小光",
+                threadsUrl: "https://www.threads.net/@dorafairy2025"
+            },
+            {
+                id: 120,
+                name: "惡輪車業",
+                category: "汽機車",
+                region: "新北",
+                description: "🏍️惡輪車業｜三重YAMAHA認證專賣店🛠️ 老車轉生術｜動力制動提升｜新舊車買賣📍 新北市三重區中正北路512號📞 02-8983-8383（道路救援/全台托運）⏰ 平日 10:00-21:00（週日公休）⚠️ 每月最後一週週六公休",
+                threadsUrl: "https://www.threads.net/@2_moto.r"
+            },
+            {
+                id: 121,
+                name: "致同國際法律事務所",
+                category: "諮詢服務",
+                region: "網路",
+                description: "不管是讓人心煩的民事糾紛，還是壓力山大的刑事案件，律獅陪你一起找出口。不要讓法律問題影響你的睡眠，選擇獅獅，眼淚不濕。預約諮詢，讓專業成為你的底氣。",
+                threadsUrl: "https://www.threads.net/@zhitonglawfirm"
+            },
+            {
+                id: 122,
+                name: "flashlight__shop",
+                category: "飾品",
+                region: "網路",
+                description: "販賣平價質感項鍊｜手鍊｜耳環｜戒指｜配件",
+                threadsUrl: "https://www.threads.net/@flashlight__shop"
+            },
+            {
+                id: 123,
+                name: "澄田建材",
+                category: "裝潢工程",
+                region: "基隆/台北/新北/桃園/新竹/苗栗",
+                description: "耐磨、耐用、好保養的木地板首選！超耐磨木地板、SPC 地板，桃園兩家門市可預約參觀。外縣市也能免費送樣板到府，讓你挑選最適合家的木地板。",
+                threadsUrl: "https://www.threads.net/@chengtian_floor"
+            },
+            {
+                id: 124,
+                name: "Sweet 思唯特手作",
+                category: "甜點",
+                region: "高雄/網路",
+                description: "哇系賣甜點的S闆🙋想吃平價高CP值甜點找我就對了｜做出一款讓您會「思念」想再吃的「唯一」又「特別」的甜點✨是你的嘴饞好解處😎",
+                threadsUrl: "https://www.threads.net/@sweet_handmade_168"
+            },
+            {
+                id: 125,
+                name: "晶羽水晶",
+                category: "手作類/飾品",
+                region: "台中",
+                description: "Hi 我是晶羽水晶🤗 📍台中南區水晶零售批發專賣店 (父母已營30年）各種水晶、配件我們家都有，價格也都明碼標價，歡迎詢問細拍給您參考, 可➕Line群跟IG商品比較多, 每週進貨上新🤗",
+                threadsUrl: "https://www.threads.net/@jingyu_crystal"
+            },
+            {
+                id: 126,
+                name: "番茄小姐🍅Ms.TOMATO",
+                category: "選物",
+                region: "網路",
+                description: "我們是生活選品/服飾店🎀歡迎逛逛 一起讓生活變可愛๑•͈ᴗ•͈๑",
+                threadsUrl: "https://www.threads.net/@ms.tomato_26"
+            },
+            {
+                id: 127,
+                name: "邁· RICE & NOODLES",
+                category: "餐廳",
+                region: "台中",
+                description: "大家好！我們是說轉行就轉行的蕭🐺主打一次滿足大家的胃所以有便當🍱、鍋燒🍜、炒泡麵、炸物點心🍗多樣化的餐點任君挑選😋",
+                threadsUrl: "https://www.threads.net/@mind_wolf2022"
+            },
+            {
+                id: 128,
+                name: "言之理事務所",
+                category: "諮詢服務",
+                region: "網路",
+                description: "組織洞察與人本管理顧問｜用數據與結構化對話｜協助企業看見人正在發生什麼｜數據化EAPs｜ESG人本與職場韌性｜關鍵人才支持",
+                threadsUrl: "https://www.threads.net/@thereasonlab"
+            },
+            {
+                id: 129,
+                name: "一二編",
+                category: "好康特搜",
+                region: "網路",
+                description: "目前是一位在公司拍影片的小編，時常會有活動優惠和新品分享！",
+                threadsUrl: "https://www.threads.net/@onetwo.12__"
+            },
+            {
+                id: 130,
+                name: "渴飲",
+                category: "飲料",
+                region: "新北",
+                description: "渴飲用「氮氣」打發出綿密如雲的甜點級奶蓋，再輕輕疊上炙燒焦糖的香氣，口感細緻而特別｜地址:新北市蘆洲區長安街102巷5弄12號（忠義廟後面）",
+                threadsUrl: "https://www.threads.net/@tea_able_pro"
+            },
+        ];
+
+        let currentCategory = 'all';
+        let currentRegion = 'all';
+        let currentSearch = '';
+
+        const shopGrid = document.getElementById('shop-grid');
+        const categorySelect = document.getElementById('category-select');
+        const regionSelect = document.getElementById('region-select');
+        const searchInput = document.getElementById('search-input');
+
+        // --- 安全工具：過濾 HTML 標籤防止 XSS ---
+        function escapeHTML(str) {
+            if (!str) return '';
+            const p = document.createElement('p');
+            p.textContent = str;
+            return p.innerHTML;
+        }
+
+        // --- 渲染店家卡片 (包含資安保護與搜尋邏輯) ---
+        function renderShops() {
+            const filteredShops = shopData.filter(shop => {
+                const categoryMatch = currentCategory === 'all' || shop.category.includes(currentCategory);
+                const regionMatch = currentRegion === 'all' || shop.region.includes(currentRegion);
+                const searchMatch = shop.name.toLowerCase().includes(currentSearch.toLowerCase());
+                return categoryMatch && regionMatch && searchMatch;
+            });
+
+            if (filteredShops.length === 0) {
+                shopGrid.innerHTML = `
+                    <div class="col-span-full py-20 text-center animate-fade-in">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-50 mb-4 text-gray-300">
+                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                        </div>
+                        <p class="text-gray-400 text-lg font-medium">找不到符合條件的店家</p>
+                        <p class="text-gray-300 text-sm mt-2 font-light">請嘗試不同的關鍵字、類別或地區吧！</p>
+                    </div>
+                `;
+                return;
+            }
+
+            shopGrid.innerHTML = filteredShops.map(shop => {
+                const safeName = escapeHTML(shop.name);
+                const safeDesc = escapeHTML(shop.description);
+                const safeCategory = escapeHTML(shop.category);
+                const safeRegion = escapeHTML(shop.region);
+                const safeUrl = escapeHTML(shop.threadsUrl);
+
+                return `
+                    <div class="shop-card bg-white rounded-[2rem] p-8 border border-gray-100 flex flex-col h-full shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:border-black/10">
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="text-[10px] font-bold px-3 py-1.5 bg-gray-50 text-gray-500 rounded-xl uppercase tracking-wider">${safeCategory}</span>
+                            <span class="text-[10px] font-bold px-3 py-1.5 bg-black text-white rounded-xl uppercase tracking-wider">${safeRegion}</span>
+                        </div>
+                        <div class="flex-grow">
+                            <h3 class="text-2xl font-black text-gray-900 mb-4 leading-tight">${safeName}</h3>
+                            <p class="text-gray-500 text-sm leading-relaxed mb-8 font-light">${safeDesc}</p>
+                        </div>
+                        <div class="mt-auto">
+                            <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between w-full group py-2">
+                                <span class="text-sm font-bold text-gray-900 group-hover:underline underline-offset-8 decoration-2 transition-all">前往 Threads 主頁</span>
+                                <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-black group-hover:text-white group-hover:rotate-45 transition-all duration-300">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 監聽搜尋輸入
+        searchInput.addEventListener('input', (e) => {
+            currentSearch = e.target.value;
+            renderShops();
+        });
+
+        // 監聽類別選單變動
+        categorySelect.addEventListener('change', (e) => {
+            currentCategory = e.target.value;
+            renderShops();
+        });
+
+        // 監聽地區篩選變動
+        regionSelect.addEventListener('change', (e) => {
+            currentRegion = e.target.value;
+            renderShops();
+        });
+
+        // 初始渲染
+        window.addEventListener('DOMContentLoaded', renderShops);
+    </script>
+</body>
+</html>
